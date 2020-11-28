@@ -5,7 +5,7 @@ import aiohttp_jinja2
 import os
 import socketio
 
-from chat import proc_msg
+from chat_web_browser import proc_msg
 
 
 sio = socketio.AsyncServer(async_mode='aiohttp', async_handlers=True)

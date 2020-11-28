@@ -38,6 +38,11 @@ You also need `nltk`:
 pip install nltk
  ```
 
+For all packages installation
+```console
+pip install -r requirements.txt
+ ```
+
 If you get an error during the first run, you also need to install `nltk.tokenize.punkt`:
 Run this once in your terminal:
  ```console
@@ -52,8 +57,15 @@ Run
 python train.py
 ```
 This will dump `data.pth` file. And then run
+
+(chat in command line)
 ```console
 python chat.py
+```
+
+(chat in web browser)
+```console
+python app.py
 ```
 ## Customize
 Have a look at [intents.json](intents.json). You can customize it according to your own use case. Just define a new `tag`, possible `patterns`, and possible `responses` for the chat bot. You have to re-run the training whenever this file is modified.
