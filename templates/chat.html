@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css" />
+    <!-- Begin Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/fontawesome.min.css">
+    <!--link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"-->
+    <!-- End Font Awesome CSS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+</head>
+<body style="overflow-y:hidden;" class="has-navbar-fixed-bottom">
+    
+    <!-- Post Button -->
+    <nav class="navbar is-fixed-bottom" role="navigation" aria-label="main navigation">
+        <div class="container">
+            <div class="navbar-item is-expanded">
+                <input id="post-text" class="input" type="text" name="msg" placeholder="Type your message here">
+                <a id="post-btn" class="button is-info"><i class="fas fa-paper-plane"></i>&nbsp;Send</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    <div id="content" class="container" style="overflow-y:auto; margin-bottom: 100px;"></div>
+
+    <script type="text/javascript">
+
+        const socket = io.connect(document.location.origin + '/bot_chat');
+
+        $('input[name=msg]').keypress(function(e) {
+            if (e.keyCode == 13) {
+                $('#post-btn').click();
+            }
+        });
+
+        $('#post-btn').on('click', function(){
+
+            let message_template = `
+                <article class="media">
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>&nbsp;You</strong>
+                                <br> &nbsp;${$('input[name=msg]').val()}
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            `;
+                                
+            $("#content").append(message_template);
+
+            socket.emit('send_msg', $('input[name=msg]').val());
+            $("#post-text").val('');
+        });
+
+        socket.on('reply', function(data){
+
+            let message_template = `
+                <article class="media">
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>&nbsp;${data.user}</strong>
+                                <br> &nbsp;${data.msg}
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            `;
+                                
+            $("#content").append(message_template);
+
+        });
+
+    </script>
+</body>
+</html>
